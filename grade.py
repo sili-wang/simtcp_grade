@@ -25,7 +25,7 @@ def run_test_case(case: TestCase) -> TestResult:
     half_credit_time = case.secs * 2.0
     start_time = time.time()
 
-    test_args = ["python3.6", "tester.py", "--file", case.args.file, "--loss",
+    test_args = ["python3.8", "tester.py", "--file", case.args.file, "--loss",
                  case.args.loss, "--buffer", case.args.buffer,
                  "--delay", case.args.delay]
 
@@ -47,16 +47,41 @@ def run_test_case(case: TestCase) -> TestResult:
 
 
 TEST_CASES = [
-    TestCase(TestArguments("grading_data/test-1.bin", "0", ".5", "10"), 7),
-    TestCase(TestArguments("grading_data/test-2.bin", "0", "0.1", "20"), 5),
-    TestCase(TestArguments("grading_data/test-3.bin", "0", ".01", "30"), 6),
-    TestCase(TestArguments("grading_data/test-4.bin", "0.1", ".1", "40"), 6),
-    TestCase(TestArguments("grading_data/test-5.bin", "0.1", ".01", "50"), 32),
-    TestCase(TestArguments("grading_data/test-6.bin", "0", ".01", "60"), 12),
+    TestCase(TestArguments("grading_data/test-1.bin", "0.05", ".5", "10"), 9),
+    TestCase(TestArguments("grading_data/test-1.bin", "0.5", ".5", "10"), 15),
+    TestCase(TestArguments("grading_data/test-2.bin", "0.15", "0.1", "20"), 12),
+    TestCase(TestArguments("grading_data/test-3.bin", "0.05", ".01", "30"), 16),
+    TestCase(TestArguments("grading_data/test-3.bin", "0.25", ".01", "30"), 25),
+    TestCase(TestArguments("grading_data/test-4.bin", "0.1", ".1", "40"), 9),
+    TestCase(TestArguments("grading_data/test-4.bin", "0.4", ".2", "40"), 15),
+    TestCase(TestArguments("grading_data/test-5.bin", "0.05", ".01", "500"), 45),
+    TestCase(TestArguments("grading_data/test-6.bin", "0.02", ".02", "600"), 52),
+    TestCase(TestArguments("grading_data/test-6.bin", "0.2", ".01", "300"), 60),
+
+    # TestCase(TestArguments("grading_data/test-1.bin", "0", ".5", "10"), 9),
+    # TestCase(TestArguments("grading_data/test-1.bin", "0", ".5", "10"), 15),
+    # TestCase(TestArguments("grading_data/test-2.bin", "0", "0.1", "20"), 12),
+    # TestCase(TestArguments("grading_data/test-3.bin", "0", ".01", "30"), 16),
+    # TestCase(TestArguments("grading_data/test-3.bin", "0", ".01", "30"), 25),
+    # TestCase(TestArguments("grading_data/test-4.bin", "0", ".1", "40"), 9),
+    # TestCase(TestArguments("grading_data/test-4.bin", "0", ".2", "40"), 15),
+    # TestCase(TestArguments("grading_data/test-5.bin", "0", ".01", "500"), 45),
+    # TestCase(TestArguments("grading_data/test-6.bin", "0", ".02", "600"), 52),
+    # TestCase(TestArguments("grading_data/test-6.bin", "0", ".01", "300"), 60),
+
+
+
+    # TestCase(TestArguments("grading_data/test-1.bin", "0", ".5", "10"), 7),
+    # TestCase(TestArguments("grading_data/test-2.bin", "0", "0.1", "20"), 5),
+    # TestCase(TestArguments("grading_data/test-3.bin", "0", ".01", "30"), 6),
+    # TestCase(TestArguments("grading_data/test-4.bin", "0.1", ".1", "40"), 6),
+    # TestCase(TestArguments("grading_data/test-5.bin", "0.1", ".01", "50"), 32),
+    # TestCase(TestArguments("grading_data/test-6.bin", "0", ".01", "60"), 12),
 ]
 
 TOTAL_SCORE = 0
-MAX_SCORE = 12
+MAX_SCORE = 20
+TOTAL_TIME = 0
 for CASE_NUM, A_CASE in enumerate(TEST_CASES):
     FULL_CREDIT_TIME = A_CASE.secs * 1.5
     HALF_CREDIT_TIME = FULL_CREDIT_TIME * 1.5
@@ -81,6 +106,8 @@ for CASE_NUM, A_CASE in enumerate(TEST_CASES):
 
 
     CASE_RESULT = run_test_case(A_CASE)
+    if CASE_RESULT.duration:
+        TOTAL_TIME += CASE_RESULT.duration
     if CASE_RESULT.type == TestResultType.TRANSFER_ERROR:
         print("  ! 0 points, file was transferred incorrectly")
     elif CASE_RESULT.type == TestResultType.TRANSFER_TIMEOUT:
@@ -91,9 +118,10 @@ for CASE_NUM, A_CASE in enumerate(TEST_CASES):
         TOTAL_SCORE += 1
     elif CASE_RESULT.type == TestResultType.FAST_TRANSFER:
         print("  * 2 points, transferred in {} secs".format(round(CASE_RESULT.duration)))
-        TOTAL_SCORE += 2
+        TOTAL_SCORE += 1
     print("")
 
 print("==========")
-print("Total Score: {} / {}".format(TOTAL_SCORE, MAX_SCORE))
+print("Success Case: {} / {}".format(TOTAL_SCORE/2, MAX_SCORE/2))
+print("Total Time: {} ".format(TOTAL_TIME))
 sys.exit(0 if TOTAL_SCORE == MAX_SCORE else 1)

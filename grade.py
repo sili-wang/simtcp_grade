@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+\#!/usr/bin/env python3
 import os
 import signal
 from subprocess import Popen, PIPE
@@ -80,8 +80,11 @@ TEST_CASES = [
 ]
 
 TOTAL_SCORE = 0
+SUC_CASE = 0
 MAX_SCORE = 20
+MAX_CASE = 10
 TOTAL_TIME = 0
+TIME_LIST = []
 for CASE_NUM, A_CASE in enumerate(TEST_CASES):
     FULL_CREDIT_TIME = A_CASE.secs * 1.5
     HALF_CREDIT_TIME = FULL_CREDIT_TIME * 1.5
@@ -106,6 +109,7 @@ for CASE_NUM, A_CASE in enumerate(TEST_CASES):
 
 
     CASE_RESULT = run_test_case(A_CASE)
+    TIME_LIST.append(CASE_RESULT.duration)
     if CASE_RESULT.duration:
         TOTAL_TIME += CASE_RESULT.duration
     if CASE_RESULT.type == TestResultType.TRANSFER_ERROR:
@@ -116,12 +120,16 @@ for CASE_NUM, A_CASE in enumerate(TEST_CASES):
     elif CASE_RESULT.type == TestResultType.SLOW_TRANSFER:
         print("  ~ 1 point, transferred in {} secs".format(round(CASE_RESULT.duration)))
         TOTAL_SCORE += 1
+        SUC_CASE += 1
     elif CASE_RESULT.type == TestResultType.FAST_TRANSFER:
         print("  * 2 points, transferred in {} secs".format(round(CASE_RESULT.duration)))
         TOTAL_SCORE += 1
+        SUC_CASE += 1
     print("")
 
 print("==========")
-print("Success Case: {} / {}".format(TOTAL_SCORE/2, MAX_SCORE/2))
+print("Success Case: {} / {}".format(SUC_CASE, MAX_CASE))
+
+print("Time: {} ".format(TIME_LIST))
 print("Total Time: {} ".format(TOTAL_TIME))
 sys.exit(0 if TOTAL_SCORE == MAX_SCORE else 1)

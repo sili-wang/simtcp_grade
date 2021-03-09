@@ -1,13 +1,14 @@
-## Project: Reliable Communication
+### Usage of grade script
 
-In this project, you will implement reliable communication over an unreliable
-link, just like TCP.
+You may want to test your result with grade.py, this script can be run in terminal by the following line:
 
-You will be provided with code that simulates an unreliable link between sender
-and receiver.  This link has a very constrained buffer (only two packets can
-be 'in flight' at a time), and can have arbitrary delay and loss rates.  Your
-job will be to create and implement a protocol over this connection that
-correctly transfers data, in a reasonable amount of time.
+python3 grade.py
+
+
+My python version is python 3.8. You need to modify line 28 if you have a different python version.
+We have 10 testcase, the grade script will gives you the total transimision time and the number of success case.
+
+
 
 
 ### Writing Your Solution
